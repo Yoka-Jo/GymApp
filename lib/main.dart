@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import './screens/logo_screen.dart';
+import 'screens/login/logo_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import './screens/chosen_screen.dart';
+import 'screens/home/bottom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'shared/components/splach_screen.dart';
-import './screens/date_screen.dart';
-import './screens/newWorkOut_screen.dart';
-import './screens/addNewExercise_screen.dart';
+import './screens/home/date_screen.dart';
+import 'screens/last_work_out_screen.dart';
+import 'screens/add_new_exercise_screen.dart';
 import 'package:provider/provider.dart';
 import './provider_HB/provider_HB.dart';
-import './screens/userInfo_screen.dart';
+import './screens/home/userInfo_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ProviderHelper(),
+      create: (context) => ProviderHelper()..getUserData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
            brightness: Brightness.dark,
          ),
         ),
-        title: 'Demo App',
+        title: 'Gym App',
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context , snapShot) {
@@ -48,8 +48,8 @@ class MyApp extends StatelessWidget {
         routes: {
           ChosenScreen.routeName : (context) => ChosenScreen(),
           DateScreen.routeName: (context) => DateScreen(),
-          NewWorkOut.routeName: (context) => NewWorkOut(),
-          AddNewWorkOut.routeName: (context) => AddNewWorkOut(),
+          LastWorkOutScreen.routeName: (context) => LastWorkOutScreen(),
+          AddNewExerciseScreen.routeName: (context) => AddNewExerciseScreen(),
           UserInfoScreen.routeName:(context) => UserInfoScreen()
         },
       ),

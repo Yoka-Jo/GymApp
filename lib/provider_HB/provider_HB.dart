@@ -1,5 +1,14 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:test_app/models/exercise_model.dart';
+import 'package:test_app/models/user_model.dart';
+import 'package:test_app/screens/home/date_screen.dart';
+import 'package:test_app/screens/home/welcome_screen.dart';
 import '../shared/constants/Gym_Data.dart';
 
 class ProviderHelper with ChangeNotifier {
@@ -113,29 +122,97 @@ class ProviderHelper with ChangeNotifier {
   }
 
 
-  DropdownButton<String> monthsDropDown() {
-    List<DropdownMenuItem<String>> dropDownItems = [];
-    for (var months in Months) {
-      var newItem = DropdownMenuItem(
-        child: Text(months),
-        value: months,
-      );
-      dropDownItems.add(newItem);
-    }
-    return DropdownButton(
-      underline: Container(),
-      value: selectedMonth,
-      items: dropDownItems,
-      icon: Icon(
-        Icons.keyboard_arrow_down,
-        color: Colors.white54,
-      ),
-      dropdownColor: Color(0xff2D2940),
-      style: TextStyle(color: Colors.white),
-      onChanged: (value) {
-        selectedMonth = value;
+
+  final user = FirebaseAuth.instance.currentUser;
+  UserModel model;
+
+  void getUserData() {
+    FirebaseFirestore.instance
+        .collection('emails')
+        .doc(user.uid)
+        .get()
+        .then((value) {
+      print(value);
+      model = UserModel.fromJson(value.data());
+      notifyListeners();
+    }).catchError((error) {
+      print(error);
+    });
+  }
+
+  bool isPostUserExercise = false;
+
+  Future<void> postUserExercise(context) async {
+    isPostUserExercise = true;
+    notifyListeners();
+    if (formKey.currentState.validate() && selectedItem != null) {
+      formKey.currentState.save();
+      final time = DateTime.now();
+      List<double> weight = weightList.map(double.parse).toList();
+
+      ExerciseModel model = ExerciseModel(
+          id: time.toString(),
+          muscle: selectedMuscle,
+          exerciseType: selectedItem,
+          exerciseTime: DateFormat.MMMEd().format(DateTime.now()),
+          setsNumber: setsNumber + 1,
+          reps: repsList,
+          weights: weightList,
+          maxWeight: weight.fold(weight[0], max),
+          pointTime: DateTime.now().day.toString());
+
+      await FirebaseFirestore.instance
+          .collection("usersExercises")
+          .doc(user.uid)
+          .collection('newExercise')
+          .doc(time.toString())
+          .set(model.toMap());
+      await FirebaseFirestore.instance
+          .collection("usersExercises")
+          .doc(user.uid)
+          .collection('diagramPoints')
+          .doc(time.toString())
+          .set({
+        'muscle': selectedMuscle,
+        'weight': weight.fold(weight[0], max),
+        'pointTime': DateTime.now().day,
+        'id': time.toString()
+      });
+      await FirebaseFirestore.instance
+          .collection("usersExercises")
+          .doc(user.uid)
+          .collection('events')
+          .doc(time.toString())
+          .set({'data': DateTime.now(), 'id': time.toString()});
+        reset();
+        isPostUserExercise = false;
         notifyListeners();
-      },
-    );
+    } else {
+      isPostUserExercise = false;
+      notifyListeners();
+      return Future.error("This is the error", StackTrace.fromString("This is its trace"));
+    }
+  }
+
+  bool isUpdated = false;
+  void updateUser({String name, String height, String weight}) {
+    isUpdated = true;
+    notifyListeners();
+    FirebaseFirestore.instance.collection("emails").doc(user.uid).update({
+      "userName": name.isEmpty ? model.name : name,
+      "weight": weight.isEmpty ? model.weight : int.parse(weight),
+      "height": height.isEmpty ? model.height : int.parse(height)
+    }).then((value) {
+      isUpdated = false;
+      notifyListeners();
+      getUserData();
+    });
+  }
+
+  int navIndex = 0;
+  List<Widget> navScreens = [WelcomeScreen(), DateScreen()];
+  void changeNavIndex(int index) {
+    navIndex = index;
+    notifyListeners();
   }
 }

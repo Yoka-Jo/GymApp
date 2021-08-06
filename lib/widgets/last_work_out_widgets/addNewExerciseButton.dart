@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../screens/addNewExercise_screen.dart';
+import '../../screens/add_new_exercise_screen.dart';
 import 'dart:ui' as ui;
 class AddNewExerciseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.of(context).pushNamed(AddNewWorkOut.routeName);
+        Navigator.of(context).pushNamed(AddNewExerciseScreen.routeName);
       },
       child: Container(
         padding: EdgeInsets.all(1),

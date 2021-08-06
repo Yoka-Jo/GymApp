@@ -28,18 +28,23 @@ class LineTitles{
     leftTitles: SideTitles(
       showTitles: true,
       getTitles: (value) {
-        switch(value.toInt()){
-          case 0:
-            return '0';
-          case 1:
-            return '20';
-          case 2:
-            return '40';
-          case 3:
-            return '60';
-
+        if(value.toInt()%20 ==0){
+        return (value).toInt().toString();
         }
-        return '';
+        return "";
+        // switch(value.toInt()){
+
+        //   case 0:
+        //     return '20';
+        //   case 1:
+        //     return '40';
+        //   case 2:
+        //     return '60';
+        //   case 3:
+        //     return '80';
+
+        // }
+        // return '';
       },
       getTextStyles: (value) => const TextStyle(
         color: Colors.white

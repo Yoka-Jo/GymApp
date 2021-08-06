@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../provider_HB/provider_HB.dart';
+import 'package:test_app/provider_HB/provider_HB.dart';
 
-class SetsNumbers extends StatefulWidget {
+class SetsShape extends StatefulWidget {
   @override
-  _SetsNumbersState createState() => _SetsNumbersState();
+  _SetsShapeState createState() => _SetsShapeState();
 }
 
-class _SetsNumbersState extends State<SetsNumbers> {
-  //// The Start of the formState
+class _SetsShapeState extends State<SetsShape> {
   TextEditingController _nameController;
 
   @override
@@ -160,20 +159,22 @@ class _SetsTextFieldsState extends State<SetsTextFields> {
                     Radius.circular(5),
                   ),
                   color: Color(0xff39364B)),
-              child: Center(
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(color: Colors.white),
-                  controller: _repsController,
-                  textAlign: TextAlign.center,
-                  onChanged: (v) =>
-                      Provider.of<ProviderHelper>(context, listen: false)
-                          .repsList[widget.index] = v,
-                  validator: (v) {
-                    if (v.trim().isEmpty) return 'Field Needed';
-                    return null;
-                  },
+              child: TextFormField(
+                decoration: InputDecoration(
+                  // error
+                   errorStyle: TextStyle(height: 0.0),
                 ),
+                keyboardType: TextInputType.number,
+                style: TextStyle(color: Colors.white),
+                controller: _repsController,
+                textAlign: TextAlign.center,
+                onChanged: (v) =>
+                    Provider.of<ProviderHelper>(context, listen: false)
+                        .repsList[widget.index] = v,
+                validator: (v) {
+                  if (v.trim().isEmpty) return '';
+                  return null;
+                },
               ),
             ),
             SizedBox(
@@ -226,6 +227,9 @@ class _SetsTextFieldsState extends State<SetsTextFields> {
                   color: Color(0xff39364B)),
               child: Center(
                 child: TextFormField(
+                  decoration: InputDecoration(
+                   errorStyle: TextStyle(height: 0.0),
+                  ),
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -236,7 +240,7 @@ class _SetsTextFieldsState extends State<SetsTextFields> {
                       Provider.of<ProviderHelper>(context, listen: false)
                           .weightList[widget.index] = v,
                   validator: (v) {
-                    if (v.trim().isEmpty) return 'Field Needed';
+                    if (v.trim().isEmpty) return '';
                     return null;
                   },
                 ),

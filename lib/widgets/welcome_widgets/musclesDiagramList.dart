@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../widgets/diagramList.dart';
+import 'chartList.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 class MusclesDiagramList extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class _MusclesDiagramListState extends State<MusclesDiagramList> {
       child: Column(
         children: [
           StreamBuilder(
-              stream: FirebaseFirestore.instance.collection(user).doc('user').collection('newExercise').orderBy('id' , descending:false)
+              stream: FirebaseFirestore.instance.collection("usersExercises").doc(user).collection('newExercise').orderBy('id' , descending:false)
                   .snapshots(),
               builder: (ctx, snapShot) {
                 if (snapShot.connectionState == ConnectionState.waiting) {
@@ -25,14 +25,22 @@ class _MusclesDiagramListState extends State<MusclesDiagramList> {
                 else {
                   try {
                     final data = snapShot.data.docs;
-                    return data.isEmpty ? Container() : Column(
+                    return data.isEmpty ?
+              Column(
+                children: [
+                  Text("Let's Do Some WorkOut Now" , style: TextStyle(color: Colors.white70, fontSize: 25.0),),
+                  SizedBox(height: 30.0,)
+                ],
+              )
+                     : Column(
                       children: [
                         ConstrainedBox(
                           constraints:   BoxConstraints(
                           minHeight: 35.0,
-                          maxHeight: 140.0,
+                          maxHeight: 138.0,
                         ),
                           child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
                             padding: EdgeInsets.only(left: 20 ,right: 20 , bottom: 8),
                             scrollDirection: Axis.horizontal,
                               itemCount: data.length,
@@ -67,7 +75,7 @@ class _MusclesDiagramListState extends State<MusclesDiagramList> {
                                             ),
                                             Text(data[index]['muscle'].split(' ').first,
                                               style: TextStyle(color: Colors.white , fontWeight: FontWeight.bold),),
-                                            Text(data[index]['timeInDetail'],
+                                            Text(data[index]['exerciseTime'],
                                               style: TextStyle(color: Colors.white),)
                                           ],
                                         ),
@@ -77,9 +85,9 @@ class _MusclesDiagramListState extends State<MusclesDiagramList> {
                                             color: Color(0xff2D2940),
                                               icon: Icon(Icons.more_horiz,  color: Colors.blue,),
                                               onSelected: (value){
-                                                FirebaseFirestore.instance.collection(user).doc('user').collection('newExercise').doc(data[index]['id']).delete();
-                                                FirebaseFirestore.instance.collection(user).doc('user').collection('diagramPoints').doc(data[index]['id']).delete();
-                                                FirebaseFirestore.instance.collection(user).doc('user').collection('events').doc(data[index]['id']).delete();
+                                                FirebaseFirestore.instance.collection("usersExercises").doc(user).collection('newExercise').doc(data[index]['id']).delete();
+                                                FirebaseFirestore.instance.collection("usersExercises").doc(user).collection('diagramPoints').doc(data[index]['id']).delete();
+                                                FirebaseFirestore.instance.collection("usersExercises").doc(user).collection('events').doc(data[index]['id']).delete();
                                                 setState(() {
                                                 });
                                               },
@@ -102,7 +110,9 @@ class _MusclesDiagramListState extends State<MusclesDiagramList> {
               }
           ),
           Expanded(
-          child: ListView(padding: EdgeInsets.only(top: 10), children: [
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.only(top: 10), children: [
       ChartList('Bicebs'),
       ChartList('Triceps'),
       ChartList('Chest'),

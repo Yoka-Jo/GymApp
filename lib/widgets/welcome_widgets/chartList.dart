@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../shared/components/LineTitles.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:test_app/shared/components/LineTitles.dart';
 class ChartList extends StatefulWidget {
   final String name;
 
@@ -20,56 +20,59 @@ class _ChartListState extends State<ChartList> {
   final user = FirebaseAuth.instance.currentUser.uid;
 
   List<FlSpot> diagram(dynamic data) {
-    print('called');
+    flSpot = [];
     int m = 0;
-
     while (m < data.length) {
       if(data[m]['muscle'].split(' ').first == widget.name) {
+        if(data[m]['pointTime'].toDouble() < 30 || data[m]['weight']>120){
         switch (data[m]['muscle']
             .split(' ')
             .first) {
           case 'Bicebs':
             flSpot.add(FlSpot(
-                data[m]['timePoints'].toDouble(), data[m]['weight'] / 10));
+                data[m]['pointTime'].toDouble(), 
+                data[m]['weight'] 
+                ));
             break;
 
           case 'Triceps':
             flSpot.add(FlSpot(
-                data[m]['timePoints'].toDouble(), data[m]['weight'] / 10));
+                data[m]['pointTime'].toDouble(), data[m]['weight']));
             break;
 
           case 'Chest':
             flSpot.add(FlSpot(
-                data[m]['timePoints'].toDouble(), data[m]['weight'] / 10));
+                data[m]['pointTime'].toDouble(), data[m]['weight']));
             break;
 
           case 'calves':
             flSpot.add(FlSpot(
-                data[m]['timePoints'].toDouble(), data[m]['weight'] / 10));
+                data[m]['pointTime'].toDouble(), data[m]['weight']));
             break;
 
           case 'hamstrings':
             flSpot.add(FlSpot(
-                data[m]['timePoints'].toDouble(), data[m]['weight'] / 10));
+                data[m]['pointTime'].toDouble(), data[m]['weight']));
             break;
 
           case 'quadriceps':
             flSpot.add(FlSpot(
-                data[m]['timePoints'].toDouble(), data[m]['weight'] / 10));
+                data[m]['pointTime'].toDouble(), data[m]['weight']));
             break;
 
           case 'trapezius':
             flSpot.add(FlSpot(
-                data[m]['timePoints'].toDouble(), data[m]['weight'] / 10));
+                data[m]['pointTime'].toDouble(), data[m]['weight']));
             break;
 
           case 'forearms':
             flSpot.add(FlSpot(
-                data[m]['timePoints'].toDouble(), data[m]['weight'] / 10));
+                data[m]['pointTime'].toDouble(), data[m]['weight']));
             break;
 
           default:
             return [FlSpot(1, 2)];
+        }
         }
       }
 //      print(flSpot);
@@ -80,11 +83,10 @@ class _ChartListState extends State<ChartList> {
 
   @override
   Widget build(BuildContext context) {
-    flSpot = [];
     return Container(
       margin: EdgeInsets.only(right: 20, left: 20, bottom: 20),
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      height: 200,
+      height: 250,
       width: 100,
       decoration: BoxDecoration(
           color: Color(0xff2D2940),
@@ -93,7 +95,7 @@ class _ChartListState extends State<ChartList> {
             BoxShadow(
                 color: Colors.black26,
                 blurRadius: 10,
-                spreadRadius: 10,
+                spreadRadius: 2,
                 offset: Offset(0, 5))
           ]),
       child: Column(
@@ -117,8 +119,9 @@ class _ChartListState extends State<ChartList> {
             color: Colors.white30,
             thickness: .7,
           ),
+          SizedBox(height: 20.0,),
           Container(
-            height: 130,
+            height: 160,
             width: 400,
 //                                padding: EdgeInsets.only(left: 30),
             child: Row(
@@ -131,10 +134,11 @@ class _ChartListState extends State<ChartList> {
                       style: TextStyle(
                           color: Colors.white70, fontWeight: FontWeight.w300),
                     )),
+                    SizedBox(width: 8.0,),
                 Expanded(
-                  child: StreamBuilder(
+                  child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
-                          .collection(user).doc('user').collection('diagramPoints')
+                          .collection("usersExercises").doc(user).collection('diagramPoints')
                           .snapshots(),
                       builder: (ctx,  snapShot) {
                         if (snapShot.connectionState == ConnectionState.waiting) {
@@ -143,7 +147,8 @@ class _ChartListState extends State<ChartList> {
                         else {
                           final data = snapShot.data.docs;
                           try {
-                            return LineChart(
+                            return 
+                            LineChart(
                                 LineChartData(
                                 borderData: FlBorderData(
                                   show: false,
@@ -151,19 +156,21 @@ class _ChartListState extends State<ChartList> {
                                 titlesData: LineTitles.getTitleData(),
                                 gridData: FlGridData(show: false),
                                 backgroundColor: Color(0xff39364B),
-                                minX: 0,
-                                maxX: 30.8,
-                                minY: -1,
-                                maxY: 3.5,
+                                minX: 1,
+                                maxX: 29,
+                                minY: 0,
+                                maxY: 120,
                                 lineBarsData: [
                                   LineChartBarData(
                                     isCurved: true,
-                                    dotData: FlDotData(show: false),
-                                    spots:
-                                      diagram(data).isNotEmpty ? diagram(data) : [FlSpot(0,-1)],
+                                    dotData: FlDotData(show:false),
+                                    spots: 
+                                    // [FlSpot(10,20) , FlSpot(15,40) , FlSpot(20,20) , FlSpot(10,20) , FlSpot(15,40) , FlSpot(20,20), FlSpot(10,20) , FlSpot(15,40) , FlSpot(20,20)],
+                                      diagram(data).isNotEmpty ? diagram(data) : 
+                                      [FlSpot(0,-1.0)],
                                     colors: [
-                                      Color(0xff37779A),
-                                      Color(0xff46DFC9)
+                                      Colors.blue,
+                                      // Color(0xff46DFC9)
                                     ],
                                   ),
                                 ]));

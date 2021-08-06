@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import '../provider_HB/provider_HB.dart';
+import '../../provider_HB/provider_HB.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SelectTypeScreen extends StatelessWidget {
+class SelectedTypeShape extends StatelessWidget {
   final List<QueryDocumentSnapshot> data;
-  SelectTypeScreen(this.data);
+  SelectedTypeShape(this.data);
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 150,
       child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Wrap(
           direction: Axis.horizontal,
           children: data.map((DocumentSnapshot value) {
@@ -20,16 +21,18 @@ class SelectTypeScreen extends StatelessWidget {
                   horizontal: 5, vertical: 4),
               child: Consumer<ProviderHelper>(
                 builder: (context, provider, _) =>
-                    RaisedButton(
-                      color: provider.selectedItem ==
+                    ElevatedButton(
+                      style: ButtonStyle(
+                       backgroundColor: provider.selectedItem ==
                           value.data()['title']
-                          ? Colors.blue.shade400
-                          : Color(0xff39364B),
+                          ? MaterialStateProperty.all<Color>(Colors.blue.shade400)
+                          : MaterialStateProperty.all<Color>(Color(0xff39364B)),
                       padding:
-                      EdgeInsets.symmetric(horizontal: 8),
-                      shape: RoundedRectangleBorder(
+                      MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.symmetric(horizontal: 8)),
+                      shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.circular(30)),
+                          BorderRadius.circular(30))),
+                      ),
                       child: FittedBox(
                         child: Text(
                           value.data()['title'],
@@ -65,14 +68,14 @@ class SelectTypeScreen extends StatelessWidget {
                                       color: Colors.white),
                                 ),
                                 actions: [
-                                  FlatButton(
+                                  TextButton(
                                       onPressed: () {
                                         Navigator.of(
                                             context)
                                             .pop();
                                       },
                                       child: Text('No')),
-                                  FlatButton(
+                                  TextButton(
                                       onPressed: () async {
                                         Navigator.of(
                                             context)

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import '../widgets/setsShape.dart';
 import 'package:provider/provider.dart';
-import '../provider_HB/provider_HB.dart';
+import 'package:test_app/widgets/add_new_exercise_widgets/setsShape.dart';
+import '../../provider_HB/provider_HB.dart';
 
-class HowManySetsScreen extends StatefulWidget {
+class HowManySets extends StatefulWidget {
   @override
-  _HowManySetsScreenState createState() => _HowManySetsScreenState();
+  _HowManySetsState createState() => _HowManySetsState();
 }
 
-class _HowManySetsScreenState extends State<HowManySetsScreen> {
+class _HowManySetsState extends State<HowManySets> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ProviderHelper>(context, listen: false);
@@ -23,7 +23,7 @@ class _HowManySetsScreenState extends State<HowManySetsScreen> {
               color: Colors.black26,
               offset: Offset(0, 4),
               blurRadius: 10,
-              spreadRadius: 10),
+              spreadRadius: 1),
         ],
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
@@ -83,9 +83,7 @@ class _HowManySetsScreenState extends State<HowManySetsScreen> {
               height: 8,
             ),
 
-//    for(int i =0; i< provider.setsNumber;i++)...{
-            SetsNumbers()
-//    },
+            SetsShape()
           ],
         ),
       ),

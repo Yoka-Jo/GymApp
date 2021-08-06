@@ -31,18 +31,3 @@ var exerciseType = [
   'Zottman Curl',
   'Incline Dumbell Curl'
 ];
-
-const List<String> Months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-];
