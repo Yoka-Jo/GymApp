@@ -76,7 +76,7 @@ class _MusclesDiagramListState extends State<MusclesDiagramList> {
                                             Text(data[index]['muscle'].split(' ').first,
                                               style: TextStyle(color: Colors.white , fontWeight: FontWeight.bold),),
                                             Text(data[index]['exerciseTime'],
-                                              style: TextStyle(color: Colors.white),)
+                                              style: TextStyle(color: Colors.grey.shade400),)
                                           ],
                                         ),
                                         Align(

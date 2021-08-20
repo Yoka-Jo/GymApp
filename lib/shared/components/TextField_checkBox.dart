@@ -97,7 +97,7 @@ class _TextFormState extends State<TextForm> {
         obscureText: 1 == widget.show ? false : showPassword,
         keyboardType: widget.textInputType,
         style: TextStyle(
-          color: Colors.white70,
+          color: Colors.white,
         ),
         decoration: InputDecoration(
           labelText: widget.labelText,

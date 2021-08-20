@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:test_app/models/user_model.dart';
 import 'package:test_app/provider_HB/provider_HB.dart';
 import 'package:test_app/screens/edit_user_screen.dart';
+import 'package:test_app/screens/login/logo_screen.dart';
 import 'package:test_app/shared/components/background.dart';
 
 class UserInfoScreen extends StatelessWidget {
@@ -245,6 +246,7 @@ class UserInfoScreen extends StatelessWidget {
         onChanged: (itemIdentifier) {
           if (itemIdentifier == 'Logout') {
             FirebaseAuth.instance.signOut();
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LogoScreen()));
           } else {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => EditUserScreen()));

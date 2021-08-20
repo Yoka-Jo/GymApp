@@ -163,11 +163,9 @@ class _ChartListState extends State<ChartList> {
                                 lineBarsData: [
                                   LineChartBarData(
                                     isCurved: true,
-                                    dotData: FlDotData(show:false),
+                                    dotData: FlDotData(show: diagram(data).isNotEmpty ? true:false),
                                     spots: 
-                                    // [FlSpot(10,20) , FlSpot(15,40) , FlSpot(20,20) , FlSpot(10,20) , FlSpot(15,40) , FlSpot(20,20), FlSpot(10,20) , FlSpot(15,40) , FlSpot(20,20)],
-                                      diagram(data).isNotEmpty ? diagram(data) : 
-                                      [FlSpot(0,-1.0)],
+                                      diagram(data).isNotEmpty ? diagram(data) : [FlSpot(0,-1.0)],
                                     colors: [
                                       Colors.blue,
                                       // Color(0xff46DFC9)

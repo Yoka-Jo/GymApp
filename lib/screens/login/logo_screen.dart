@@ -107,7 +107,7 @@ class _LogoScreenState extends State<LogoScreen> {
             Stack(children: [
               Container(
                 margin: EdgeInsets.only(left: 18, top: 150),
-                height: isLogIN ? 340 : 450,
+                height: isLogIN ? 340 : 500,
                 width: 320,
                 decoration: BoxDecoration(
                     boxShadow: [
@@ -126,7 +126,7 @@ class _LogoScreenState extends State<LogoScreen> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -204,7 +204,7 @@ class _LogoScreenState extends State<LogoScreen> {
                               ),
                             if (!isLogIN)
                               SizedBox(
-                                height: 15,
+                                height: 25,
                               ),
                             if (isLogIN)
                               SizedBox(
@@ -228,9 +228,10 @@ class _LogoScreenState extends State<LogoScreen> {
                               rightPadding: 15,
                               errorCase: _email,
                             ),
-                            SizedBox(
-                              height: 15,
-                            ),
+                            if (!isLogIN)
+                              SizedBox(
+                                height: 25,
+                              ),
                             if (!isLogIN)
                               Row(
                                 children: [
@@ -275,10 +276,9 @@ class _LogoScreenState extends State<LogoScreen> {
                                   ),
                                 ],
                               ),
-                            if (!isLogIN)
-                              SizedBox(
-                                height: 20,
-                              ),
+                            SizedBox(
+                              height: 25,
+                            ),
                             TextForm(
                               show: 0,
                               onSaved: (value) {
@@ -330,7 +330,7 @@ class _LogoScreenState extends State<LogoScreen> {
               Stack(children: [
                 Container(
                   margin:
-                      EdgeInsets.only(top: isLogIN ? 442.5 : 557.5, left: 33.5),
+                      EdgeInsets.only(top: isLogIN ? 447.5 : 607.5, left: 33.5),
                   height: 85,
                   width: 285,
                   decoration: BoxDecoration(
@@ -348,7 +348,7 @@ class _LogoScreenState extends State<LogoScreen> {
                 GestureDetector(
                   onTap: trySubmit,
                   child: Container(
-                    margin: EdgeInsets.only(top: isLogIN ? 455 : 570, left: 48),
+                    margin: EdgeInsets.only(top: isLogIN ? 460 : 620, left: 48),
                     height: 62,
                     width: 260,
                     decoration: BoxDecoration(
