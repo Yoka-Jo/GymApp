@@ -8,18 +8,18 @@ also will show you the days in which you worked out.
 
 # Screenshots
 <p align="center">
-  <img src='gymPics/gym1.png'height="500"/> 
-  <img src='gymPics/gym2.png'height="500"/> 
-  <img src='gymPics/gym3.png'height="500"/> 
-  <img src='gymPics/gym4.png'height="500"/> 
-  <img src='gymPics/gym5.png'height="500"/> 
-  <img src='gymPics/gym6.png'height="500"/> 
-  <img src='gymPics/gym7.png'height="500"/> 
-  <img src='gymPics/gym8.png'height="500"/> 
-  <img src='gymPics/gym9.png'height="500"/> 
-  <img src='gymPics/gym10.png'height="500"/> 
-  <img src='gymPics/gym11.png'height="500"/> 
-  <img src='gymPics/gym12.png'height="500"/>  
+  <img src='gymPics/gym1.png'width="42%"/> 
+  <img src='gymPics/gym2.png'width="42%"/> 
+  <img src='gymPics/gym3.png'width="42%"/> 
+  <img src='gymPics/gym4.png'width="42%"/> 
+  <img src='gymPics/gym5.png'width="42%"/> 
+  <img src='gymPics/gym6.png'width="42%"/> 
+  <img src='gymPics/gym7.png'width="42%"/> 
+  <img src='gymPics/gym8.png'width="42%"/> 
+  <img src='gymPics/gym9.png'width="42%"/> 
+  <img src='gymPics/gym10.png'width="42%"/> 
+  <img src='gymPics/gym11.png'width="42%"/> 
+  <img src='gymPics/gym12.png'width="42%"/>  
 </p>
 
 # Features
