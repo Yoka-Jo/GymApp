@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:test_app/shared/components/background.dart';
+import 'package:test_app/shared/constants/constants.dart';
 
 class DateScreen extends StatefulWidget {
   static const routeName = '/DateScreen';
@@ -13,7 +13,6 @@ class DateScreen extends StatefulWidget {
 
 class _DateScreenState extends State<DateScreen> {
   CalendarController _controller;
-  final user = FirebaseAuth.instance.currentUser.uid;
 
   @override
   void initState() {
@@ -56,13 +55,15 @@ class _DateScreenState extends State<DateScreen> {
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                         .collection("usersExercises")
-                        .doc(user)
+                        .doc(uId)
                         .collection('events')
                         .snapshots(),
                 builder: (context, snapshot) {
                          if (snapshot.connectionState == ConnectionState.waiting) {
-                           return Center(
-                                child: CircularProgressIndicator());
+                           return Expanded(
+                             child: Center(
+                                  child: CircularProgressIndicator()),
+                           );
                          } else {
                            try{
                             return Builder(
@@ -75,7 +76,7 @@ class _DateScreenState extends State<DateScreen> {
                                     () => [0]);
                               }
                       return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20.0),
+                        margin: EdgeInsets.symmetric(horizontal: 20.0 ),
                         // width: 310,
                         // height: 340,
                         decoration: BoxDecoration(

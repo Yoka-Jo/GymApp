@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:test_app/shared/constants/constants.dart';
+import 'package:test_app/shared/network/local/cache_helper.dart';
 import 'screens/login/logo_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'screens/home/bottom_nav_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'shared/components/splach_screen.dart';
+import 'screens/home/home_screen.dart';
 import './screens/home/date_screen.dart';
 import 'screens/last_work_out_screen.dart';
 import 'screens/add_new_exercise_screen.dart';
@@ -14,15 +14,27 @@ import './screens/home/userInfo_screen.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  await CacheHelper.init();
+  uId = CacheHelper.getData(key: "uId");
+  Widget widget;
+  if(uId != null){
+  widget = HomeScreen();
+  }
+  else{
+    widget = LogoScreen();
+  }
+  runApp(MyApp(startWidget: widget,));
 }
 
 class MyApp extends StatelessWidget {
+  final Widget startWidget;
+
+  MyApp({this.startWidget});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ProviderHelper()..getUserData(),
+      create: (context) => ProviderHelper(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -33,20 +45,9 @@ class MyApp extends StatelessWidget {
          ),
         ),
         title: 'Gym App',
-        home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context , snapShot) {
-                if (snapShot.connectionState == ConnectionState.waiting) {
-                  return SplachScreen();
-                }
-                if (snapShot.hasData) {
-                  return ChosenScreen();
-                }
-                return LogoScreen();
-              }
-              ),
+        home: startWidget,
         routes: {
-          ChosenScreen.routeName : (context) => ChosenScreen(),
+          HomeScreen.routeName : (context) => HomeScreen(),
           DateScreen.routeName: (context) => DateScreen(),
           LastWorkOutScreen.routeName: (context) => LastWorkOutScreen(),
           AddNewExerciseScreen.routeName: (context) => AddNewExerciseScreen(),

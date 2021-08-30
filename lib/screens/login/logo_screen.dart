@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:test_app/shared/constants/constants.dart';
+import 'package:test_app/shared/network/local/cache_helper.dart';
 import '../../shared/components/TextField_checkBox.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../home/bottom_nav_bar.dart';
+import '../home/home_screen.dart';
 
 class LogoScreen extends StatefulWidget {
   @override
@@ -36,22 +38,41 @@ class _LogoScreenState extends State<LogoScreen> {
           _isLoading = true;
         });
         if (isLogIN) {
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-              email: _osemail.trim(), password: _ospassword.trim());
+          final userData = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(
+                  email: _osemail.trim(), password: _ospassword.trim());
+                  uId = userData.user.uid;
+          CacheHelper.saveData(key: "uId", value: userData.user.uid).then(
+              (value) => 
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            HomeScreen.routeName,
+            (route) {
+              return false;
+            },
+          ));
         } else {
-          UserCredential authResult = await FirebaseAuth.instance
+          final userData = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(
                   email: _osemail.trim(), password: _ospassword.trim());
+                  uId = userData.user.uid;
+          CacheHelper.saveData(key: "uId", value: userData.user.uid);
+
           await FirebaseFirestore.instance
               .collection('emails')
-              .doc(authResult.user.uid)
+              .doc(userData.user.uid)
               .set({
             'userName': _osuserName.trim(),
             'weight': _osweight,
             'height': _osheight,
             'userId': FirebaseAuth.instance.currentUser.uid,
           });
-          Navigator.of(context).pushReplacementNamed(ChosenScreen.routeName);
+
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            HomeScreen.routeName,
+            (route) {
+              return false;
+            },
+          );
         }
       } on FirebaseAuthException catch (e) {
         print(e);

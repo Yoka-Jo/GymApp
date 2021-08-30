@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:test_app/shared/constants/constants.dart';
 import 'chartList.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 class MusclesDiagramList extends StatefulWidget {
   @override
   _MusclesDiagramListState createState() => _MusclesDiagramListState();
 }
 
 class _MusclesDiagramListState extends State<MusclesDiagramList> {
-  final user = FirebaseAuth.instance.currentUser.uid;
+
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class _MusclesDiagramListState extends State<MusclesDiagramList> {
       child: Column(
         children: [
           StreamBuilder(
-              stream: FirebaseFirestore.instance.collection("usersExercises").doc(user).collection('newExercise').orderBy('id' , descending:false)
+              stream: FirebaseFirestore.instance.collection("usersExercises").doc(uId).collection('newExercise').orderBy('id' , descending:false)
                   .snapshots(),
               builder: (ctx, snapShot) {
                 if (snapShot.connectionState == ConnectionState.waiting) {
@@ -39,16 +39,14 @@ class _MusclesDiagramListState extends State<MusclesDiagramList> {
                           minHeight: 35.0,
                           maxHeight: 138.0,
                         ),
-                          child: ListView.builder(
+                          child: ListView.separated(
                             physics: BouncingScrollPhysics(),
                             padding: EdgeInsets.only(left: 20 ,right: 20 , bottom: 8),
                             scrollDirection: Axis.horizontal,
                               itemCount: data.length,
+                              separatorBuilder: (context , i)=> SizedBox(width: 15.0,),
                               itemBuilder: (context, index) =>
                                   Container(
-                                    width: 135,
-                                    margin: EdgeInsets.only(right: 20),
-                                    padding: EdgeInsets.only(left: 10 , bottom: 5),
                                     decoration: BoxDecoration(
                                       color: Color(0xff2D2940),
                                       boxShadow: [BoxShadow(
@@ -62,17 +60,11 @@ class _MusclesDiagramListState extends State<MusclesDiagramList> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
+                                        SizedBox(width: 20.0,),
                                         Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            Container(
-                                            height: 55,
-                                            width: 55,
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle
-                                              ),
-                                              child: Center(child: Image.asset('assets/images/dum.png' , fit: BoxFit.cover,)),
-                                            ),
+                                            Image.asset('assets/images/dum.png' , fit: BoxFit.cover,height: 55,),
                                             Text(data[index]['muscle'].split(' ').first,
                                               style: TextStyle(color: Colors.white , fontWeight: FontWeight.bold),),
                                             Text(data[index]['exerciseTime'],
@@ -85,9 +77,9 @@ class _MusclesDiagramListState extends State<MusclesDiagramList> {
                                             color: Color(0xff2D2940),
                                               icon: Icon(Icons.more_horiz,  color: Colors.blue,),
                                               onSelected: (value){
-                                                FirebaseFirestore.instance.collection("usersExercises").doc(user).collection('newExercise').doc(data[index]['id']).delete();
-                                                FirebaseFirestore.instance.collection("usersExercises").doc(user).collection('diagramPoints').doc(data[index]['id']).delete();
-                                                FirebaseFirestore.instance.collection("usersExercises").doc(user).collection('events').doc(data[index]['id']).delete();
+                                                FirebaseFirestore.instance.collection("usersExercises").doc(uId).collection('newExercise').doc(data[index]['id']).delete();
+                                                FirebaseFirestore.instance.collection("usersExercises").doc(uId).collection('diagramPoints').doc(data[index]['id']).delete();
+                                                FirebaseFirestore.instance.collection("usersExercises").doc(uId).collection('events').doc(data[index]['id']).delete();
                                                 setState(() {
                                                 });
                                               },

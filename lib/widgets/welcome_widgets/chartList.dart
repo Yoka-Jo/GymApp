@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:test_app/shared/components/LineTitles.dart';
+import 'package:test_app/shared/constants/constants.dart';
 class ChartList extends StatefulWidget {
   final String name;
 
@@ -17,7 +17,6 @@ class ChartList extends StatefulWidget {
 
 class _ChartListState extends State<ChartList> {
   List<FlSpot> flSpot = [];
-  final user = FirebaseAuth.instance.currentUser.uid;
 
   List<FlSpot> diagram(dynamic data) {
     flSpot = [];
@@ -138,7 +137,7 @@ class _ChartListState extends State<ChartList> {
                 Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
-                          .collection("usersExercises").doc(user).collection('diagramPoints')
+                          .collection("usersExercises").doc(uId).collection('diagramPoints')
                           .snapshots(),
                       builder: (ctx,  snapShot) {
                         if (snapShot.connectionState == ConnectionState.waiting) {
@@ -165,7 +164,7 @@ class _ChartListState extends State<ChartList> {
                                     isCurved: true,
                                     dotData: FlDotData(show: diagram(data).isNotEmpty ? true:false),
                                     spots: 
-                                      diagram(data).isNotEmpty ? diagram(data) : [FlSpot(0,-1.0)],
+                                      diagram(data).isNotEmpty ? diagram(data) : [FlSpot(0 , 0)],
                                     colors: [
                                       Colors.blue,
                                       // Color(0xff46DFC9)

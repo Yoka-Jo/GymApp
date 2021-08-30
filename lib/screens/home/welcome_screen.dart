@@ -7,8 +7,6 @@ import 'package:test_app/shared/components/background.dart';
 import 'package:test_app/widgets/welcome_widgets/musclesDiagramList.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  final user = FirebaseAuth.instance.currentUser.uid;
-
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<ProviderHelper>(context).model;

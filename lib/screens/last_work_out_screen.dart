@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:test_app/shared/components/background.dart';
+import 'package:test_app/shared/constants/constants.dart';
 import '../widgets/last_work_out_widgets/addNewExerciseButton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class LastWorkOutScreen extends StatelessWidget {
   static const routeName = '/newWorkOut';
-  final user = FirebaseAuth.instance.currentUser.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +76,7 @@ class LastWorkOutScreen extends StatelessWidget {
               StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("usersExercises")
-                      .doc(user)
+                      .doc(uId)
                       .collection('newExercise')
                       .orderBy('id')
                       .snapshots(),

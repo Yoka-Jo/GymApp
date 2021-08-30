@@ -1,7 +1,5 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +7,7 @@ import 'package:test_app/models/exercise_model.dart';
 import 'package:test_app/models/user_model.dart';
 import 'package:test_app/screens/home/date_screen.dart';
 import 'package:test_app/screens/home/welcome_screen.dart';
+import 'package:test_app/shared/constants/constants.dart';
 import '../shared/constants/Gym_Data.dart';
 
 class ProviderHelper with ChangeNotifier {
@@ -123,13 +122,13 @@ class ProviderHelper with ChangeNotifier {
 
 
 
-  final user = FirebaseAuth.instance.currentUser;
+  // final user = FirebaseAuth.instance.currentUser;
   UserModel model;
 
   void getUserData() {
     FirebaseFirestore.instance
         .collection('emails')
-        .doc(user.uid)
+        .doc(uId)
         .get()
         .then((value) {
       print(value);
@@ -163,13 +162,13 @@ class ProviderHelper with ChangeNotifier {
 
       await FirebaseFirestore.instance
           .collection("usersExercises")
-          .doc(user.uid)
+          .doc(uId)
           .collection('newExercise')
           .doc(time.toString())
           .set(model.toMap());
       await FirebaseFirestore.instance
           .collection("usersExercises")
-          .doc(user.uid)
+          .doc(uId)
           .collection('diagramPoints')
           .doc(time.toString())
           .set({
@@ -180,7 +179,7 @@ class ProviderHelper with ChangeNotifier {
       });
       await FirebaseFirestore.instance
           .collection("usersExercises")
-          .doc(user.uid)
+          .doc(uId)
           .collection('events')
           .doc(time.toString())
           .set({'data': DateTime.now(), 'id': time.toString()});
@@ -198,7 +197,7 @@ class ProviderHelper with ChangeNotifier {
   void updateUser({String name, String height, String weight}) {
     isUpdated = true;
     notifyListeners();
-    FirebaseFirestore.instance.collection("emails").doc(user.uid).update({
+    FirebaseFirestore.instance.collection("emails").doc(uId).update({
       "userName": name.isEmpty ? model.name : name,
       "weight": weight.isEmpty ? model.weight : int.parse(weight),
       "height": height.isEmpty ? model.height : int.parse(height)
