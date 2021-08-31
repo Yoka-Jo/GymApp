@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:test_app/models/exercise_type_model.dart';
 import '../../provider_HB/provider_HB.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SelectedTypeShape extends StatelessWidget {
-  final List<QueryDocumentSnapshot> data;
+  final List<ExerciseTypeModel> data;
   SelectedTypeShape(this.data);
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,8 @@ class SelectedTypeShape extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         child: Wrap(
           direction: Axis.horizontal,
-          children: data.map((DocumentSnapshot value) {
+          children: data.map((ExerciseTypeModel value) {
+            String exerciseType = value.title;
             return Container(
               height: 28,
               margin: EdgeInsets.symmetric(
@@ -25,7 +26,7 @@ class SelectedTypeShape extends StatelessWidget {
                     ElevatedButton(
                       style: ButtonStyle(
                        backgroundColor: provider.selectedItem ==
-                          value.data()['title']
+                          exerciseType
                           ? MaterialStateProperty.all<Color>(Colors.blue.shade400)
                           : MaterialStateProperty.all<Color>(Color(0xff39364B)),
                       padding:
@@ -36,11 +37,11 @@ class SelectedTypeShape extends StatelessWidget {
                       ),
                       child: FittedBox(
                         child: Text(
-                          value.data()['title'],
+                          exerciseType,
                           style: TextStyle(
                               color: provider
                                   .selectedItem ==
-                                  value.data()['title']
+                                  exerciseType
                                   ? Colors.white
                                   : Colors.blue,
                               fontSize: 11),
@@ -50,7 +51,7 @@ class SelectedTypeShape extends StatelessWidget {
                         Provider.of<ProviderHelper>(context,
                             listen: false)
                             .updateColor(
-                            value.data()['title']);
+                            exerciseType);
                       },
                       onLongPress: () {
                         return showDialog(
@@ -81,13 +82,7 @@ class SelectedTypeShape extends StatelessWidget {
                                         Navigator.of(
                                             context)
                                             .pop();
-                                        await FirebaseFirestore
-                                            .instance
-                                            .collection(
-                                            'exercisesType')
-                                            .doc(value
-                                            .data()['title'])
-                                            .delete();
+                                        provider.deleteExerciseType(value.createdAt);
                                       },
                                       child: Text('Yes'))
                                 ],
