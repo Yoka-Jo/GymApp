@@ -19,30 +19,8 @@ class ProviderHelper with ChangeNotifier {
   List<String> repsList = [null];
   List<String> weightList = [null];
   final formKey = GlobalKey<FormState>();
-  int rePeat = 0;
-  String selectedMonth = 'January';
 
-  void oK() {
-    rePeat = 1;
-    notifyListeners();
-  }
 
-  void nO() {
-    rePeat = 0;
-    notifyListeners();
-  }
-
-  String get selectedItem {
-    return _selectedItem;
-  }
-
-  String get selectedMuscle {
-    return _selectedMuscle;
-  }
-
-  int get setsNumber {
-    return _setsNumber;
-  }
 
   void updateColor(String value) {
     if (selectedItem == value) {
@@ -119,8 +97,6 @@ class ProviderHelper with ChangeNotifier {
     weightValue = value;
     notifyListeners();
   }
-
-
 
   // final user = FirebaseAuth.instance.currentUser;
   UserModel model;
