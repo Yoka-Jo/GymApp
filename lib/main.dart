@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ProviderHelper(),
+      create: (context) => ProviderHelper()..getUserExercises(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

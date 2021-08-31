@@ -33,11 +33,11 @@ class _HowManySetsState extends State<HowManySets> {
           children: [
             SizedBox(height: 5),
             Text('How many sets', style: TextStyle(color: Colors.white)),
-
+    
             SizedBox(
               height: 10,
             ),
-
+    
             Container(
               height: 45,
               width: 280,
@@ -78,11 +78,11 @@ class _HowManySetsState extends State<HowManySets> {
                 ],
               ),
             ),
-
+    
             SizedBox(
               height: 8,
             ),
-
+    
             SetsShape()
           ],
         ),

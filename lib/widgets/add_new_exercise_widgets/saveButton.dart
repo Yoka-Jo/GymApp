@@ -9,8 +9,8 @@ class SaveButton extends StatelessWidget {
 
     return GestureDetector(
       onTap: () async {
-        // try {
         await provider.postUserExercise(context).then((value) {
+          provider.getUserExercises();
           Navigator.of(context).pop();
         }).catchError((error) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -25,19 +25,6 @@ class SaveButton extends StatelessWidget {
           ));
         });
       }
-      // catch(error){
-      //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //     duration: Duration(seconds: 1),
-      //     content: Text(
-      //       'Complete The Form!',
-      //       style: TextStyle(color: Colors.white),
-      //       textAlign: TextAlign.center,
-      //     ),
-      //     backgroundColor: Theme.of(context).errorColor,
-      //   ));
-      // }
-      // },
       ,
       child: Provider.of<ProviderHelper>(context).isPostUserExercise
           ? Center(

@@ -5,7 +5,7 @@ import 'package:test_app/models/user_model.dart';
 import 'package:test_app/provider_HB/provider_HB.dart';
 import 'package:test_app/screens/edit_user_screen.dart';
 import 'package:test_app/screens/login/logo_screen.dart';
-import 'package:test_app/shared/components/background.dart';
+import 'package:test_app/shared/components/background_color.dart';
 import 'package:test_app/shared/network/local/cache_helper.dart';
 
 class UserInfoScreen extends StatelessWidget {
@@ -14,148 +14,149 @@ class UserInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<ProviderHelper>(context).model;
-    return Scaffold(
-        appBar: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.only(top:20.0 , left:20.0),
-            child: Text(
-              data.name,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20),
+    return BackgroundColor(
+      onBackgroundWidget: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            automaticallyImplyLeading: false, // Don't show the leading button
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                data.name,
+                style: TextStyle(
+                  height:1.5 ,
+                    fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20.0 , overflow: TextOverflow.ellipsis)
+                    ,
 
+              ) ,
+                dropDownMenu(context, data),
+              ],
             ),
           ),
-          actions: [
-            dropDownMenu(context, data),
-            SizedBox(width: 20.0,)
-          ],
-        ),
-        body: data == null
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Stack(
-                children: [
-                  background(),
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 50.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 20.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black38,
-                                    blurRadius: 10,
-                                    spreadRadius: 3,
-                                    offset: Offset(0, 15)),
-                              ],
-                              color: Color(0xff2D2940),
+          body: data == null
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 50.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
                             ),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                    padding: EdgeInsets.only(left: 20, top: 10),
-                                    width: double.infinity,
-                                    child: Text(
-                                      'Personal Info',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white,
-                                      ),
-                                      textAlign: TextAlign.start,
-                                    )),
-                                Divider(
-                                  color: Colors.white30,
-                                  indent: 20,
-                                  endIndent: 20,
-                                ),
-                                userDataTitle('Full Name'),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                userDataContainer(
-                                  icon: Icons.person_outline,
-                                  userData: data.name,
-                                  rightPadding: 20,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                userDataTitle('Weight'),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                userDataContainer(
-                                  icon: Icons.line_weight,
-                                  userData: data.weight.toString(),
-                                  rightPadding: 80,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                userDataTitle('height'),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                userDataContainer(
-                                  icon: Icons.height,
-                                  userData: data.height.toString(),
-                                  rightPadding: 140,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                              ],
-                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black38,
+                                  blurRadius: 10,
+                                  spreadRadius: 3,
+                                  offset: Offset(0, 15)),
+                            ],
+                            color: Color(0xff2D2940),
                           ),
-                          SizedBox(
-                            height: 60,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          child: Column(
                             children: [
-                              Text(
-                                'Go',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 30),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(left: 20, top: 10),
+                                  width: double.infinity,
+                                  child: Text(
+                                    'Personal Info',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  )),
+                              Divider(
+                                color: Colors.white30,
+                                indent: 20,
+                                endIndent: 20,
+                              ),
+                              userDataTitle('Full Name'),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              userDataContainer(
+                                icon: Icons.person_outline,
+                                userData: data.name,
+                                rightPadding: 20,
                               ),
                               SizedBox(
-                                width: 20,
+                                height: 10,
                               ),
-                              IconButton(
-                                icon: Icon(Icons.arrow_back_ios),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                color: Colors.blue,
-                                iconSize: 50,
+                              userDataTitle('Weight'),
+                              SizedBox(
+                                height: 10,
                               ),
-                              Text(
-                                'Back',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 30),
+                              userDataContainer(
+                                icon: Icons.line_weight,
+                                userData: data.weight.toString(),
+                                rightPadding: 80,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              userDataTitle('height'),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              userDataContainer(
+                                icon: Icons.height,
+                                userData: data.height.toString(),
+                                rightPadding: 140,
+                              ),
+                              SizedBox(
+                                height: 30,
                               ),
                             ],
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Go',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 30),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.arrow_back_ios),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              color: Colors.blue,
+                              iconSize: 50,
+                            ),
+                            Text(
+                              'Back',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 30),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ));
+                  ),
+                )),
+    );
   }
 
   Widget userDataContainer(

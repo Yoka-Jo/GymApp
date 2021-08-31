@@ -47,7 +47,7 @@ class _ChooseMuscleGroupState extends State<ChooseMuscleGroup> {
                     color: Colors.white, fontWeight: FontWeight.w500),
               ),
               Spacer(),
-              Provider.of<ProviderHelper>(context , listen: false).androidDropDown(),
+              Provider.of<ProviderHelper>(context , listen: false).dropDownMenu(),
             ])),
       ]),
     );

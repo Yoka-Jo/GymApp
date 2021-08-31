@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:test_app/shared/components/background.dart';
-import 'package:test_app/shared/constants/constants.dart';
+import 'package:test_app/provider_HB/provider_HB.dart';
+import 'package:test_app/shared/components/background_color.dart';
 
 class DateScreen extends StatefulWidget {
   static const routeName = '/DateScreen';
@@ -19,60 +19,53 @@ class _DateScreenState extends State<DateScreen> {
     _controller = CalendarController();
     super.initState();
   }
+  @override
+  void dispose() { 
+    _controller.dispose();
+    super.dispose();
+  }
 
   Map<DateTime, List<dynamic>> days = {};
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: RichText(
-            text: TextSpan(children: [
-              TextSpan(
-                text: ' Log',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 23),
-              ),
-              TextSpan(
-                text: '  History',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white70,
-                    fontSize: 18),
-              )
-            ]),
+    final provider = Provider.of<ProviderHelper>(context);
+    final exercises = provider.exercises;
+    return BackgroundColor(
+      onBackgroundWidget: Scaffold(
+        backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: RichText(
+              text: TextSpan(children: [
+                TextSpan(
+                  text: ' Log',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 23),
+                ),
+                TextSpan(
+                  text: '  History',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white70,
+                      fontSize: 18),
+                )
+              ]),
+            ),
           ),
-        ),
-        body: Stack(children: [
-          background(),
-          Column(
+          body: Column(
             children: [
               SizedBox(
                 height: 50.0,
               ),
-              StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                        .collection("usersExercises")
-                        .doc(uId)
-                        .collection('events')
-                        .snapshots(),
-                builder: (context, snapshot) {
-                         if (snapshot.connectionState == ConnectionState.waiting) {
-                           return Expanded(
-                             child: Center(
-                                  child: CircularProgressIndicator()),
-                           );
-                         } else {
-                           try{
-                            return Builder(
+              Builder(
                     builder: (context) {        
-                          final data = snapshot.data.docs;
+                          final data = exercises;
                               for (int i = 0; i < data.length; i++) {
                                 days.putIfAbsent(
                                     DateTime.parse(
-                                        data[i]['data'].toDate().toString()),
+                                        data[i].calendarDate.toString()),
                                     () => [0]);
                               }
                       return Container(
@@ -183,17 +176,32 @@ class _DateScreenState extends State<DateScreen> {
                               
                       );
                     }
-                  );
-                           }
-                           catch(e){
-                             print(e);
-                           }
-                           return Container();
-                         }
-                }
-              ),
+                  ),
+              // StreamBuilder<QuerySnapshot>(
+              //   stream: FirebaseFirestore.instance
+              //           .collection("usersExercises")
+              //           .doc(uId)
+              //           .collection('events')
+              //           .snapshots(),
+              //   builder: (context, snapshot) {
+              //            if (snapshot.connectionState == ConnectionState.waiting) {
+              //              return Expanded(
+              //                child: Center(
+              //                     child: CircularProgressIndicator()),
+              //              );
+              //            } else {
+              //              try{
+              //               return 
+              //              }
+              //              catch(e){
+              //                print(e);
+              //              }
+              //              return Container();
+              //            }
+              //   }
+              // ),
             ],
-          ),
-        ]));
+          )),
+    );
   }
 }

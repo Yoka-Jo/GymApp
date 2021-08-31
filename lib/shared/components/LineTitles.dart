@@ -10,14 +10,16 @@ class LineTitles{
         switch(value.toInt()){
           case 1:
             return '${DateTime.now().month}/1';
-          case 8:
-            return '${DateTime.now().month}/8';
-          case 15:
-            return '${DateTime.now().month}/15';
-          case 22:
-            return '${DateTime.now().month}/22';
-          case 29:
-            return '${DateTime.now().month}/29';
+          case 7:
+            return '${DateTime.now().month}/7';
+          case 13:
+            return '${DateTime.now().month}/13';
+          case 19:
+            return '${DateTime.now().month}/19';
+          case 25:
+            return '${DateTime.now().month}/25';
+          case 31:
+            return '${DateTime.now().month}/31';
         }
         return '';
       },
@@ -32,19 +34,6 @@ class LineTitles{
         return (value).toInt().toString();
         }
         return "";
-        // switch(value.toInt()){
-
-        //   case 0:
-        //     return '20';
-        //   case 1:
-        //     return '40';
-        //   case 2:
-        //     return '60';
-        //   case 3:
-        //     return '80';
-
-        // }
-        // return '';
       },
       getTextStyles: (value) => const TextStyle(
         color: Colors.white
