@@ -4,9 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:test_app/models/exercise_model.dart';
+import 'package:test_app/models/exercise_type_model.dart';
 import 'package:test_app/models/user_model.dart';
 import 'package:test_app/screens/home/date_screen.dart';
-import 'package:test_app/screens/home/welcome_screen.dart';
+import 'package:test_app/screens/home/exercises_info_screen.dart';
 import 'package:test_app/shared/constants/constants.dart';
 import '../shared/constants/Gym_Data.dart';
 
@@ -20,8 +21,8 @@ class ProviderHelper with ChangeNotifier {
   List<String> weightList = [null];
   final formKey = GlobalKey<FormState>();
 
- String get selectedItem => _selectedExerciseType;
-  
+  String get selectedItem => _selectedExerciseType;
+
   String get selectedMuscle => _selectedMuscle;
 
   int get setsNumber => _setsNumber;
@@ -67,7 +68,7 @@ class ProviderHelper with ChangeNotifier {
     }
   }
 
-    PopupMenuButton<String> dropDownMenu() {
+  PopupMenuButton<String> dropDownMenu() {
     List<PopupMenuItem<String>> dropDownItems = [];
     for (var data in muscleGroup) {
       var newItem = PopupMenuItem(
@@ -92,21 +93,13 @@ class ProviderHelper with ChangeNotifier {
         });
   }
 
-
   UserModel model;
 
-  void getUserData() {
-    FirebaseFirestore.instance
-        .collection('emails')
-        .doc(uId)
-        .get()
-        .then((value) {
-      print(value);
-      model = UserModel.fromJson(value.data());
-      notifyListeners();
-    }).catchError((error) {
-      print(error);
-    });
+  Future<void> getUserData() async {
+    final users =
+        await FirebaseFirestore.instance.collection('emails').doc(uId).get();
+    model = UserModel.fromJson(users.data());
+    notifyListeners();
   }
 
   bool isPostUserExercise = false;
@@ -120,18 +113,17 @@ class ProviderHelper with ChangeNotifier {
       List<double> weight = weightList.map(double.parse).toList();
 
       ExerciseModel model = ExerciseModel(
-          id: time.toString(),
-          muscle: _selectedMuscle,
-          exerciseType: _selectedExerciseType,
-          exerciseTime: DateFormat.MMMEd().format(DateTime.now()),
-          calendarDate: DateTime.now().toString(),
-          setsNumber: _setsNumber + 1,
-          reps: repsList,
-          weights: weightList,
-          maxWeight: weight.fold(weight[0], max),
-          pointTime: DateTime.now().day.toString(),
-          
-          );
+        id: time.toString(),
+        muscle: _selectedMuscle,
+        exerciseType: _selectedExerciseType,
+        exerciseTime: DateFormat.MMMEd().format(DateTime.now()),
+        calendarDate: DateTime.now().toString(),
+        setsNumber: _setsNumber + 1,
+        reps: repsList,
+        weights: weightList,
+        maxWeight: weight.fold(weight[0], max),
+        pointTime: DateTime.now().day.toString(),
+      );
       await FirebaseFirestore.instance
           .collection("usersExercises")
           .doc(uId)
@@ -151,56 +143,100 @@ class ProviderHelper with ChangeNotifier {
 
   List<ExerciseModel> exercises = [];
   bool getExercisesLoading = false;
-  void getUserExercises() {
+  Future<void> getUserExercises() async {
     exercises = [];
     getExercisesLoading = true;
     notifyListeners();
-    FirebaseFirestore.instance
+    final fetchedExercises = await FirebaseFirestore.instance
         .collection("usersExercises")
         .doc(uId)
         .collection('newExercise')
         .orderBy('id', descending: false)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        exercises.add(ExerciseModel.fromJson(element.data()));
-      });
-      getExercisesLoading = false;
-      notifyListeners();
+        .get();
+
+    fetchedExercises.docs.forEach((element) {
+      exercises.add(ExerciseModel.fromJson(element.data()));
     });
+    getExercisesLoading = false;
+    notifyListeners();
   }
 
   bool isUpdated = false;
-  void updateUser({String name, String height, String weight}) {
+  Future<void> updateUser({String name, String height, String weight}) async {
     isUpdated = true;
     notifyListeners();
-    FirebaseFirestore.instance.collection("emails").doc(uId).update({
+    await FirebaseFirestore.instance.collection("emails").doc(uId).update({
       "userName": name.isEmpty ? model.name : name,
       "weight": weight.isEmpty ? model.weight : int.parse(weight),
       "height": height.isEmpty ? model.height : int.parse(height)
-    }).then((value) {
-      isUpdated = false;
-      notifyListeners();
-      getUserData();
     });
+
+    isUpdated = false;
+    notifyListeners();
+    return await getUserData();
+  }
+
+  Future<void> postExerciseType(String value) async {
+    String timeExerciseTypeCreated = Timestamp.now().toString();
+    ExerciseTypeModel exerciseTypeModel =
+        ExerciseTypeModel(createdAt: timeExerciseTypeCreated, title: value);
+
+    await FirebaseFirestore.instance
+        .collection('exercisesType')
+        .doc(timeExerciseTypeCreated)
+        .set(exerciseTypeModel.toMap());
+    getExerciseTypes();
+  }
+
+  List<ExerciseTypeModel> exericseTypes = [];
+  bool getExericseTypesLoading = false;
+  Future<void> getExerciseTypes() async {
+    exericseTypes = [];
+    getExericseTypesLoading = true;
+    notifyListeners();
+    final fetchedExercisesType =
+        await FirebaseFirestore.instance.collection('exercisesType').get();
+    fetchedExercisesType.docs.forEach((element) {
+      exericseTypes.add(ExerciseTypeModel.fromJson(element.data()));
+    });
+    getExericseTypesLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> deleteExerciseType(String exerciseTypeId) async {
+    ExerciseTypeModel backupExerciseType = exericseTypes
+        .firstWhere((element) => element.createdAt == exerciseTypeId);
+    try {
+      await FirebaseFirestore.instance
+          .collection('exercisesType')
+          .doc(exerciseTypeId)
+          .delete();
+      exericseTypes
+          .removeWhere((element) => element.createdAt == exerciseTypeId);
+      notifyListeners();
+    } catch (error) {
+      exericseTypes.add(backupExerciseType);
+      notifyListeners();
+    }
   }
 
   void deleteExercise(String exerciseId) {
-    ExerciseModel backupExercise = exercises.firstWhere((element) => element.id == exerciseId);
+    ExerciseModel backupExercise =
+        exercises.firstWhere((element) => element.id == exerciseId);
     final docPath =
         FirebaseFirestore.instance.collection("usersExercises").doc(uId);
-    try{
-    docPath.collection('newExercise').doc(exerciseId).delete();
-    exercises.removeWhere((element) => element.id == exerciseId);
-    notifyListeners();
-    }catch(error){
-    exercises.add(backupExercise);
-    notifyListeners();
+    try {
+      docPath.collection('newExercise').doc(exerciseId).delete();
+      exercises.removeWhere((element) => element.id == exerciseId);
+      notifyListeners();
+    } catch (error) {
+      exercises.add(backupExercise);
+      notifyListeners();
     }
   }
 
   int navIndex = 0;
-  List<Widget> navScreens = [WelcomeScreen(), DateScreen()];
+  List<Widget> navScreens = [ExercisesInfoScreen(), DateScreen()];
   void changeNavIndex(int index) {
     navIndex = index;
     notifyListeners();

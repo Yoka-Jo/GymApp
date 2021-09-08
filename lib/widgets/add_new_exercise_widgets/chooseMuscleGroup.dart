@@ -2,15 +2,7 @@ import 'package:flutter/material.dart';
 import '../../shared/constants/Gym_Data.dart';
 import '../../provider_HB/provider_HB.dart';
 import 'package:provider/provider.dart';
-class ChooseMuscleGroup extends StatefulWidget {
-  @override
-  _ChooseMuscleGroupState createState() => _ChooseMuscleGroupState();
-}
-
-class _ChooseMuscleGroupState extends State<ChooseMuscleGroup> {
-
-
-
+class ChooseMuscleGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

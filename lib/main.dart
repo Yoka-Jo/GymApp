@@ -34,10 +34,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ProviderHelper()..getUserExercises(),
+      create: (context) => ProviderHelper()..getUserExercises()..getExerciseTypes(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+         textSelectionTheme: TextSelectionThemeData(
+          selectionHandleColor: Colors.transparent,
+        ),
          appBarTheme: AppBarTheme(
              color: Color(0xff232035),
            elevation: 0,

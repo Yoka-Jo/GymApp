@@ -13,7 +13,7 @@ class UserInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = Provider.of<ProviderHelper>(context).model;
+    final  data = Provider.of<ProviderHelper>(context).model;
     return BackgroundColor(
       onBackgroundWidget: Scaffold(
           backgroundColor: Colors.transparent,
@@ -250,7 +250,7 @@ class UserInfoScreen extends StatelessWidget {
             });
           } else {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => EditUserScreen()));
+                MaterialPageRoute(builder: (context) => EditUserScreen(userModel: model)));
           }
         },
       );

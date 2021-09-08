@@ -6,7 +6,7 @@ import 'package:test_app/screens/home/userInfo_screen.dart';
 import 'package:test_app/shared/components/background_color.dart';
 import 'package:test_app/widgets/welcome_widgets/musclesDiagramList.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class ExercisesInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<ProviderHelper>(context).model;

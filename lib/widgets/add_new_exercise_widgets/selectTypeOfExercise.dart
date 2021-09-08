@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:test_app/provider_HB/provider_HB.dart';
 import 'package:test_app/widgets/add_new_exercise_widgets/exerciseTypeShape.dart';
 
 class SelectTypeOfExerciseScreen extends StatefulWidget {
@@ -13,19 +14,12 @@ class _SelectTypeOfExerciseScreenState extends State<SelectTypeOfExerciseScreen>
   bool delete;
   final textController = TextEditingController();
 
-  Future<void> onSubmit(String value) async {
+  Future<void> onSubmit(String value)async{
     if (value != null) {
-      await FirebaseFirestore.instance
-          .collection('exercisesType')
-          .doc(value)
-          .set({
-        'title': value,
-        'createdAt': Timestamp.now(),
-      });
+      Provider.of<ProviderHelper>(context , listen: false).postExerciseType(value);
       textController.clear();
-    } else {
-      return;
     }
+    return;
   }
 
   @override
@@ -36,6 +30,7 @@ class _SelectTypeOfExerciseScreenState extends State<SelectTypeOfExerciseScreen>
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ProviderHelper>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -63,25 +58,29 @@ class _SelectTypeOfExerciseScreenState extends State<SelectTypeOfExerciseScreen>
           ),
           child: Column(
             children: [
-              StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('exercisesType')
-                      .orderBy('createdAt', descending: false)
-                      .snapshots(),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapShot) {
-                    if (snapShot.connectionState == ConnectionState.waiting) {
-                      print('waiting');
-                      return Container(
+                   provider.getExericseTypesLoading ? Container(
                           height: 150,
-                          child: Center(child: CircularProgressIndicator()));
-                    }
+                          child: Center(child: CircularProgressIndicator())):
+                                              SelectedTypeShape(provider.exericseTypes),
 
-                    else {
-                      final data = snapShot.data.docs;
-                      return SelectedTypeShape(data);
-                      }
-                  }
-    ),
+    //           StreamBuilder(
+    //               stream: FirebaseFirestore.instance
+    //                   .collection('exercisesType')
+    //                   .orderBy('createdAt', descending: false)
+    //                   .snapshots(),
+    //               builder: (context, AsyncSnapshot<QuerySnapshot> snapShot) {
+    //                 if (snapShot.connectionState == ConnectionState.waiting) {
+    //                   print('waiting');
+    //                   return Container(
+    //                       height: 150,
+    //                       child: Center(child: CircularProgressIndicator()));
+    //                 }
+
+    //                 else {
+    //                   final data = snapShot.data.docs;
+    //                   }
+    //               }
+    // ),
               Spacer(),
               Container(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
