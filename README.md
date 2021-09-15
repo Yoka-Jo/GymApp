@@ -7,6 +7,8 @@ Graphics will show your progress and your body evolution and not only that
 also will show you the days in which you worked out.
 
 # Screenshots
+
+<p align="center"><img src='gymPics/gymGif.gif'height="500"/></p>
 <p align="center">
   <img src='gymPics/gym1.png'width="42%"/> 
   <img src='gymPics/gym2.png'width="42%"/> 
