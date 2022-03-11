@@ -13,18 +13,22 @@ class LogoScreen extends StatefulWidget {
 }
 
 class _LogoScreenState extends State<LogoScreen> {
+  // This is because i'm using switch case to return the right validation text.
+  int _validateNameError = 0;
+  int _validateEmailError = 1;
+  int _validateWeightError = 2;
+  int _validateHeightError = 3;
+  int _validatePassowrdError = 4;
+
   bool isLogIN = true;
-  int _userName = 0;
-  int _email = 1;
-  int _weight = 2;
-  int _height = 3;
-  int _password = 4;
+
   bool _isLoading = false;
-  String _osuserName = '';
-  String _osemail = '';
-  String _ospassword = '';
-  int _osweight = 0;
-  int _osheight = 0;
+
+  String _onSavedName = '';
+  String _onSavedEmail = '';
+  String _onSavedPassword = '';
+  int _onSavedWeight = 0;
+  int _onSavedHeight = 0;
 
   final submitKey = GlobalKey<FormState>();
 
@@ -41,30 +45,31 @@ class _LogoScreenState extends State<LogoScreen> {
         if (isLogIN) {
           final userData = await FirebaseAuth.instance
               .signInWithEmailAndPassword(
-                  email: _osemail.trim(), password: _ospassword.trim());
-                  uId = userData.user.uid;
-          CacheHelper.saveData(key: "uId", value: userData.user.uid).then(
-              (value) => 
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            HomeScreen.routeName,
-            (route) {
-              return false;
-            },
-          ));
+                  email: _onSavedEmail.trim(),
+                  password: _onSavedPassword.trim());
+          uId = userData.user.uid;
+          CacheHelper.saveData(key: "uId", value: userData.user.uid)
+              .then((value) => Navigator.of(context).pushNamedAndRemoveUntil(
+                    HomeScreen.routeName,
+                    (route) {
+                      return false;
+                    },
+                  ));
         } else {
           final userData = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(
-                  email: _osemail.trim(), password: _ospassword.trim());
-                  uId = userData.user.uid;
+                  email: _onSavedEmail.trim(),
+                  password: _onSavedPassword.trim());
+          uId = userData.user.uid;
           CacheHelper.saveData(key: "uId", value: userData.user.uid);
 
           await FirebaseFirestore.instance
               .collection('emails')
               .doc(userData.user.uid)
               .set({
-            'userName': _osuserName.trim(),
-            'weight': _osweight,
-            'height': _osheight,
+            'userName': _onSavedName.trim(),
+            'weight': _onSavedWeight,
+            'height': _onSavedHeight,
             'userId': FirebaseAuth.instance.currentUser.uid,
           });
 
@@ -139,8 +144,8 @@ class _LogoScreenState extends State<LogoScreen> {
                           color: Color(0xff232038),
                           blurRadius: 1.0,
                           spreadRadius: 2.5,
-                          offset:
-                              Offset(0.0, 5.0), // shadow direction: bottom right
+                          offset: Offset(
+                              0.0, 5.0), // shadow direction: bottom right
                         )
                       ], // shadow direction: bottom right
                       color: Color(0xff2F2C41),
@@ -213,7 +218,7 @@ class _LogoScreenState extends State<LogoScreen> {
                                   show: 1,
                                   onSaved: (value) {
                                     setState(() {
-                                      _osuserName = value;
+                                      _onSavedName = value;
                                     });
                                   },
                                   key: ValueKey('name'),
@@ -224,7 +229,7 @@ class _LogoScreenState extends State<LogoScreen> {
                                   textInputType: TextInputType.text,
                                   leftPadding: 15,
                                   rightPadding: 15,
-                                  errorCase: _userName,
+                                  errorValidator: _validateNameError,
                                 ),
                               if (!isLogIN)
                                 SizedBox(
@@ -239,7 +244,7 @@ class _LogoScreenState extends State<LogoScreen> {
                                 show: 1,
                                 onSaved: (value) {
                                   setState(() {
-                                    _osemail = value;
+                                    _onSavedEmail = value;
                                   });
                                 },
                                 key: ValueKey('email'),
@@ -250,7 +255,7 @@ class _LogoScreenState extends State<LogoScreen> {
                                 textInputType: TextInputType.emailAddress,
                                 leftPadding: 15,
                                 rightPadding: 15,
-                                errorCase: _email,
+                                errorValidator: _validateEmailError,
                               ),
                               if (!isLogIN)
                                 SizedBox(
@@ -264,7 +269,7 @@ class _LogoScreenState extends State<LogoScreen> {
                                         show: 1,
                                         onSaved: (value) {
                                           setState(() {
-                                            _osweight = int.parse(value);
+                                            _onSavedWeight = int.parse(value);
                                           });
                                         },
                                         key: ValueKey('weight'),
@@ -275,7 +280,7 @@ class _LogoScreenState extends State<LogoScreen> {
                                         textInputType: TextInputType.number,
                                         leftPadding: 15,
                                         rightPadding: 10,
-                                        errorCase: _weight,
+                                        errorValidator: _validateWeightError,
                                       ),
                                     ),
                                     Expanded(
@@ -284,7 +289,7 @@ class _LogoScreenState extends State<LogoScreen> {
                                         show: 1,
                                         onSaved: (value) {
                                           setState(() {
-                                            _osheight = int.parse(value);
+                                            _onSavedHeight = int.parse(value);
                                           });
                                         },
                                         key: ValueKey('height'),
@@ -295,7 +300,7 @@ class _LogoScreenState extends State<LogoScreen> {
                                         textInputType: TextInputType.number,
                                         leftPadding: 10,
                                         rightPadding: 15,
-                                        errorCase: _height,
+                                        errorValidator: _validateHeightError,
                                       ),
                                     ),
                                   ],
@@ -307,7 +312,7 @@ class _LogoScreenState extends State<LogoScreen> {
                                 show: 0,
                                 onSaved: (value) {
                                   setState(() {
-                                    _ospassword = value;
+                                    _onSavedPassword = value;
                                   });
                                 },
                                 key: ValueKey('password'),
@@ -318,7 +323,7 @@ class _LogoScreenState extends State<LogoScreen> {
                                 leftPadding: 15,
                                 rightPadding: 15,
                                 //onSubmitted: trySubmit,
-                                errorCase: _password,
+                                errorValidator: _validatePassowrdError,
                               ),
                               if (isLogIN)
                                 Row(
@@ -353,8 +358,8 @@ class _LogoScreenState extends State<LogoScreen> {
                 ),
                 Stack(children: [
                   Container(
-                    margin:
-                        EdgeInsets.only(top: isLogIN ? 447.5 : 607.5, left: 33.5),
+                    margin: EdgeInsets.only(
+                        top: isLogIN ? 447.5 : 607.5, left: 33.5),
                     height: 85,
                     width: 285,
                     decoration: BoxDecoration(
@@ -372,7 +377,8 @@ class _LogoScreenState extends State<LogoScreen> {
                   GestureDetector(
                     onTap: trySubmit,
                     child: Container(
-                      margin: EdgeInsets.only(top: isLogIN ? 460 : 620, left: 48),
+                      margin:
+                          EdgeInsets.only(top: isLogIN ? 460 : 620, left: 48),
                       height: 62,
                       width: 260,
                       decoration: BoxDecoration(
@@ -390,8 +396,8 @@ class _LogoScreenState extends State<LogoScreen> {
                       child: Center(
                           child: _isLoading
                               ? CircularProgressIndicator(
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(Colors.white),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
                                 )
                               : Text(
                                   isLogIN ? 'Log In' : 'Sign Up',
