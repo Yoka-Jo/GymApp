@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:test_app/models/exercise_model.dart';
@@ -136,8 +135,6 @@ class ProviderHelper with ChangeNotifier {
     } else {
       isPostUserExercise = false;
       notifyListeners();
-      return Future.error(
-          "This is the error", StackTrace.fromString("This is its trace"));
     }
   }
 
